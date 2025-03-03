@@ -331,19 +331,19 @@ export default function ArmoryPage() {
         )}
 
         {characters.length > 0 && (
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="md:w-1/4">
-              <div className="bg-[#1a1a1a] border border-[#3d3d3d] rounded-lg p-4 shadow-lg">
-                <h2 className="text-lg font-medium text-[#af6025] mb-4">Characters</h2>
-                <ul className="space-y-2">
+          <div className="mb-6">
+            <div className="bg-[#1a1a1a] border border-[#3d3d3d] rounded-lg p-4 shadow-lg">
+              <h2 className="text-lg font-medium text-[#af6025] mb-4">Select a character to view their equipment</h2>
+              <div className="overflow-x-auto">
+                <ul className="flex space-x-4 min-w-max pb-2">
                   {characters.map(character => (
                     <li 
                       key={character.name} 
                       onClick={() => handleCharacterSelect(character.name)} 
-                      className={`p-2 rounded cursor-pointer transition-colors duration-200 ${
+                      className={`p-3 rounded cursor-pointer transition-colors duration-200 min-w-[200px] ${
                         selectedCharacter === character.name 
                           ? 'bg-[#2a2a2a] border-l-4 border-[#af6025]' 
-                          : 'hover:bg-[#252525]'
+                          : 'hover:bg-[#252525] border border-[#3d3d3d]'
                       }`}
                     >
                       <div className="flex flex-col">
@@ -357,36 +357,38 @@ export default function ArmoryPage() {
                 </ul>
               </div>
             </div>
+          </div>
+        )}
 
-            <div className="md:w-3/4">
-              {characterData ? (
-                <div className="bg-[#1a1a1a] border border-[#3d3d3d] rounded-lg p-4 shadow-lg">
-                  <div className="mb-6 border-b border-[#3d3d3d] pb-4">
-                    <h2 className="text-xl font-bold text-[#af6025]">{characterData.character.name}</h2>
-                    <div className="mt-2">
-                      <p className="text-[#a38d6d]">Level {characterData.character.level} {characterData.character.class}</p>
-                      <p className="text-[#a38d6d]">{characterData.character.league} League</p>
+        {characters.length > 0 && (
+          <div>
+            {characterData ? (
+              <div className="bg-[#1a1a1a] border border-[#3d3d3d] rounded-lg p-4 shadow-lg">
+                <div className="mb-6 border-b border-[#3d3d3d] pb-4">
+                  <h2 className="text-xl font-bold text-[#af6025]">{characterData.character.name}</h2>
+                  <div className="mt-2">
+                    <p className="text-[#a38d6d]">Level {characterData.character.level} {characterData.character.class}</p>
+                    <p className="text-[#a38d6d]">{characterData.character.league} League</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {equipmentSlots.map(slot => (
+                    <div key={slot} className="bg-[#252525] border border-[#3d3d3d] rounded-lg overflow-hidden">
+                      {renderEquipmentSlot(slot)}
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {equipmentSlots.map(slot => (
-                      <div key={slot} className="bg-[#252525] border border-[#3d3d3d] rounded-lg overflow-hidden">
-                        {renderEquipmentSlot(slot)}
-                      </div>
-                    ))}
-                  </div>
+                  ))}
                 </div>
-              ) : selectedCharacter ? (
-                <div className="flex justify-center items-center h-64 bg-[#1a1a1a] border border-[#3d3d3d] rounded-lg">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#af6025]"></div>
-                </div>
-              ) : (
-                <div className="flex justify-center items-center h-64 bg-[#1a1a1a] border border-[#3d3d3d] rounded-lg">
-                  <p className="text-[#a38d6d]">Select a character to view their equipment</p>
-                </div>
-              )}
-            </div>
+              </div>
+            ) : selectedCharacter ? (
+              <div className="flex justify-center items-center h-64 bg-[#1a1a1a] border border-[#3d3d3d] rounded-lg">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#af6025]"></div>
+              </div>
+            ) : (
+              <div className="flex justify-center items-center h-64 bg-[#1a1a1a] border border-[#3d3d3d] rounded-lg">
+                <p className="text-[#a38d6d]">Select a character to view their equipment</p>
+              </div>
+            )}
           </div>
         )}
       </div>
