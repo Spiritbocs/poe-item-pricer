@@ -1,0 +1,13 @@
+Placeholder for class icons. 
+
+In a production environment, you would need to download and include the following class icons:
+- marauder.png
+- duelist.png
+- ranger.png
+- shadow.png
+- witch.png
+- templar.png
+- scion.png
+- unknown.png (fallback)
+
+These icons should be properly licensed or created specifically for the application.

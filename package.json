@@ -1,0 +1,36 @@
+{
+  "name": "poe1-price-checker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "download-currency-images": "ts-node scripts/downloadCurrencyImages.ts",
+    "download-specific-currency": "node scripts/downloadSpecificCurrencyImages.js",
+    "download-ninja-currency": "node scripts/downloadAllCurrencyFromNinja.js"
+  },
+  "dependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.2.67",
+    "@types/react-dom": "^18.2.23",
+    "@typescript-eslint/eslint-plugin": "^7.14.0",
+    "@typescript-eslint/parser": "^7.14.0",
+    "axios": "^1.8.1",
+    "cheerio": "^1.0.0",
+    "date-fns": "^4.1.0",
+    "eslint": "^8.57.0",
+    "next": "^14.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.9",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.0.9"
+  }
+}
