@@ -128,34 +128,33 @@ export default function ArmoryPage() {
   };
 
   const handleCharacterSelect = async (characterName: string) => {
-    if (selectedCharacter === characterName) return;
-
     setIsLoading(true);
-    setError(null);
+    setError('');
     setSelectedCharacter(characterName);
     setCharacterData(null);
-
+    
     try {
-      const response = await fetch(`/api/armory?account=${encodeURIComponent(accountName)}&character=${encodeURIComponent(characterName)}`);
-      const data = await response.json();
-
+      const response = await fetch(`/api/armory?accountName=${encodeURIComponent(accountName)}&character=${encodeURIComponent(characterName)}`);
+      
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch character data');
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Failed to fetch character data: ${response.status}`);
       }
-
-      // Find the selected character in the data
-      const character = data.characters.find((char: any) => char.name === characterName);
+      
+      const character = await response.json();
       
       if (!character) {
-        throw new Error('Character not found in response');
+        throw new Error('No character data returned');
       }
       
       // Log the character data to debug
       console.log(`Character data for ${characterName}:`, character);
       
-      if (!character.items || !Array.isArray(character.items)) {
-        console.error('No items array found for character:', character);
-        throw new Error('Character items data is missing or invalid');
+      // Always ensure there's an items array, even if empty
+      const items = character.items || [];
+      if (!Array.isArray(items)) {
+        console.error('Items is not an array for character:', character);
+        throw new Error('Character items data is invalid (not an array)');
       }
       
       // Format the data to match the expected structure
@@ -166,9 +165,10 @@ export default function ArmoryPage() {
           level: character.level,
           league: character.league
         },
-        items: character.items || []
+        items: items
       });
     } catch (err) {
+      console.error('Error fetching character data:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       setSelectedCharacter(null);
     } finally {
@@ -334,7 +334,7 @@ export default function ArmoryPage() {
           <div className="mb-6">
             <div className="bg-[#1a1a1a] border border-[#3d3d3d] rounded-lg p-4 shadow-lg">
               <h2 className="text-lg font-medium text-[#af6025] mb-4">Select a character to view their equipment</h2>
-              <div className="overflow-x-auto">
+              <div className={`${styles.characterScroller}`}>
                 <ul className="flex space-x-4 min-w-max pb-2">
                   {characters.map(character => (
                     <li 
@@ -373,11 +373,24 @@ export default function ArmoryPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {equipmentSlots.map(slot => (
-                    <div key={slot} className="bg-[#252525] border border-[#3d3d3d] rounded-lg overflow-hidden">
-                      {renderEquipmentSlot(slot)}
+                  {characterData.items.length > 0 ? (
+                    equipmentSlots.map(slot => (
+                      <div key={slot} className="bg-[#252525] border border-[#3d3d3d] rounded-lg overflow-hidden">
+                        {renderEquipmentSlot(slot)}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="col-span-3 p-6 text-center">
+                      <p className="text-[#a38d6d] mb-2">No equipment data available for this character.</p>
+                      <p className="text-sm text-[#777]">This could be due to API limitations or the character being inactive.</p>
+                      <button 
+                        onClick={() => handleCharacterSelect(selectedCharacter!)}
+                        className="mt-4 px-4 py-2 bg-[#af6025] text-white rounded-md hover:bg-[#c27b3e] transition-colors duration-200"
+                      >
+                        Retry Loading Equipment
+                      </button>
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             ) : selectedCharacter ? (
